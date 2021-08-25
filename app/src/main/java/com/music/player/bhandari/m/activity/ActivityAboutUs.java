@@ -85,12 +85,7 @@ public class ActivityAboutUs extends AppCompatActivity {
         setContentView(R.layout.activity_about_us);
 
         FloatingActionButton fab = findViewById(R.id.fb_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                open_url(FB_URL);
-            }
-        });
+        fab.setOnClickListener(v -> open_url(FB_URL));
 
         TextView site_link = findViewById(R.id.website_link);
         SpannableString spanWebsite = new SpannableString(site_link.getText());
@@ -268,15 +263,12 @@ public class ActivityAboutUs extends AppCompatActivity {
                         "AB Music to your language!")
                 .positiveText("Sure")
                 .negativeText("Nah, I don't want to")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        try {
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(TRANSLATION_HELP_WEBSITE));
-                            startActivity(browserIntent);
-                        }catch (Exception e){
-                            Toast.makeText(ActivityAboutUs.this,  getString(R.string.error_opening_browser), Toast.LENGTH_SHORT).show();
-                        }
+                .onPositive((dialog1, which) -> {
+                    try {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(TRANSLATION_HELP_WEBSITE));
+                        startActivity(browserIntent);
+                    }catch (Exception e){
+                        Toast.makeText(ActivityAboutUs.this,  getString(R.string.error_opening_browser), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .build();
@@ -299,28 +291,19 @@ public class ActivityAboutUs extends AppCompatActivity {
                 .positiveText(getString(R.string.about_us_support_dev_pos))
                 .negativeText(getString(R.string.about_us_support_dev_neg))
                 .neutralText(getString(R.string.about_us_support_dev_neu))
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Intent intent = new Intent(ActivityAboutUs.this,ActivityDonateFunds.class);
-                        intent.putExtra("donate_type",Constants.DONATE.COFFEE);
-                        startActivity(intent);
-                    }
-                }).onNeutral(new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                Intent intent = new Intent(ActivityAboutUs.this,ActivityDonateFunds.class);
-                intent.putExtra("donate_type",Constants.DONATE.JD);
-                startActivity(intent);
-            }
-        })
-                .onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        Intent intent = new Intent(ActivityAboutUs.this,ActivityDonateFunds.class);
-                        intent.putExtra("donate_type",Constants.DONATE.BEER);
-                        startActivity(intent);
-                    }
+                .onPositive((dialog1, which) -> {
+                    Intent intent = new Intent(ActivityAboutUs.this,ActivityDonateFunds.class);
+                    intent.putExtra("donate_type",Constants.DONATE.COFFEE);
+                    startActivity(intent);
+                }).onNeutral((dialog12, which) -> {
+                    Intent intent = new Intent(ActivityAboutUs.this,ActivityDonateFunds.class);
+                    intent.putExtra("donate_type",Constants.DONATE.JD);
+                    startActivity(intent);
+                })
+                .onNegative((dialog13, which) -> {
+                    Intent intent = new Intent(ActivityAboutUs.this,ActivityDonateFunds.class);
+                    intent.putExtra("donate_type",Constants.DONATE.BEER);
+                    startActivity(intent);
                 })
                 .build();
 
@@ -335,12 +318,7 @@ public class ActivityAboutUs extends AppCompatActivity {
                 .content(getString(R.string.lyrics_disclaimer_content))
                 .positiveText(getString(R.string.lyrics_disclaimer_title_pos))
                 .negativeText(getString(R.string.lyrics_disclaimer_title_neg))
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        MyApp.getPref().edit().putBoolean(getString(R.string.pref_disclaimer_accepted),true).apply();
-                    }
-                }).onNegative(new MaterialDialog.SingleButtonCallback() {
+                .onPositive((dialog1, which) -> MyApp.getPref().edit().putBoolean(getString(R.string.pref_disclaimer_accepted),true).apply()).onNegative(new MaterialDialog.SingleButtonCallback() {
             @Override
             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                 MyApp.getPref().edit().putBoolean(getString(R.string.pref_disclaimer_accepted),false).apply();
